@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{github.repository}}
+  COREPACK_ENABLE_DOWLOAD_PROMPT: 0
 
 jobs:
   build-and-test:
@@ -23,6 +24,7 @@ jobs:
           node-version: '20.x'
         
       - name: Install dependencies
+        run: corepack enable
         run: yarn install --immutable
 
       - name: Run Tests
