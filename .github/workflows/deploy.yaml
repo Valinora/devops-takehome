@@ -8,30 +8,11 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{github.repository}}
-  COREPACK_ENABLE_DOWLOAD_PROMPT: 0
+  TEST_TAG: test/test:test
+
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-        
-      - run: corepack enable
-      - run: yarn install --immutable
-      - run: yarn start
-
-      - name: Run Tests
-        uses: liatrio/github-actions/apprentice-action@master
-
-  push:
-    needs: build-and-test
+  build-and-push:
     runs-on: ubuntu-latest
 
     permissions:
@@ -41,6 +22,9 @@ jobs:
       id-token: write
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Login to Container Registry
         uses: docker/login-action@v3
         with:
@@ -54,7 +38,20 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and Push
+      - name: Build
+        uses: docker/build-push-aciton@v6
+        with:
+          load: true
+          tags: ${{ env.TEST_TAG }}
+
+      - name: Run Image
+        run:
+          docker run --rm ${{ env.TEST_TAG }}
+
+      - name: Run Tests
+        uses: liatrio/github-actions/apprentice-action@master
+
+      - name: Push
         id: push
         uses: docker/build-push-action@v6
         with:
