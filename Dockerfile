@@ -7,4 +7,5 @@ ENV COREPACK_ENABLE_DOWNLOAD_PROMPT 0
 RUN corepack enable;\
     yarn install --immutable
 
+EXPOSE 80
 CMD ["yarn", "start"]
