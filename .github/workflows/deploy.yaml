@@ -22,8 +22,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run Tests
-        uses: liatrio/github-actions/apprentice-action@master
       
       - name: Login to Container Registry
         uses: docker/login-action@v3
@@ -46,3 +44,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Run Tests
+        uses: liatrio/github-actions/apprentice-action@master
