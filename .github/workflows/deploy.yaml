@@ -52,6 +52,7 @@ jobs:
         uses: liatrio/github-actions/apprentice-action@master
 
       - name: Push
+        if: success() || failure() # Run even if the previous step fails, but not if the workflow is manually cancelled.
         id: push
         uses: docker/build-push-action@v6
         with:
