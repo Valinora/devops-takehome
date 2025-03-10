@@ -25,6 +25,7 @@ jobs:
         
       - run: corepack enable
       - run: yarn install --immutable
+      - run: yarn start
 
       - name: Run Tests
         uses: liatrio/github-actions/apprentice-action@master
