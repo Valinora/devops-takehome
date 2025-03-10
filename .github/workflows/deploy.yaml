@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Image
         run:
-          docker run -d --rm ${{ env.TEST_TAG }}
+          docker run -d  -p 80:80 --rm ${{ env.TEST_TAG }}
 
       - name: Run Tests
         uses: liatrio/github-actions/apprentice-action@master
