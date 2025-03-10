@@ -45,7 +45,7 @@ jobs:
           tags: ${{ env.TEST_TAG }}
 
       - name: Run Image
-        run:
+        run: |
           docker run --rm ${{ env.TEST_TAG }}
 
       - name: Run Tests
