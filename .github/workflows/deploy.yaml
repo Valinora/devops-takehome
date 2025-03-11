@@ -13,7 +13,6 @@ env:
 
 jobs:
   build:
-    id: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
