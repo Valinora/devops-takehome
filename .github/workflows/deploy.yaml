@@ -12,8 +12,14 @@ env:
 
 
 jobs:
-  build:
+  build-test-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -23,10 +29,8 @@ jobs:
         with:
           load: true
           tags: ${{ env.TEST_TAG }}
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+
+    # Run Tests
       - name: Run Image
         run:
           docker run -d  -p 80:80 --rm ${{ env.TEST_TAG }}
@@ -34,17 +38,7 @@ jobs:
       - name: Run Tests
         uses: liatrio/github-actions/apprentice-action@master
 
-  push:
-    runs-on: ubuntu-latest
-    needs: build
-
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
-
-    steps:
+    # Push Artifact
       - name: Login to Container Registry
         uses: docker/login-action@v3
         with:
