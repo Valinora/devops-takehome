@@ -36,7 +36,7 @@ jobs:
           docker run -d  -p 80:80 --rm ${{ env.TEST_TAG }}
 
       - name: Run Tests
-        uses: liatrio/github-actions/apprentice-action@master
+        uses: liatrio/github-actions/apprentice-action@apprentice-action
 
     # Push Artifact
       - name: Login to Container Registry
