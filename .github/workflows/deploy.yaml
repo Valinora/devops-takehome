@@ -2,13 +2,17 @@ name: Deploy
 
 on:
   push:
-    branches: ['release']
+    tags:
+      - v**
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
+  REGION: us-west1
+  PROJECT_ID: liatriotakehome
   IMAGE_NAME: ${{github.repository}}
   TEST_TAG: test/test:test
+  APP: apiserver
 
 
 jobs:
@@ -39,24 +43,22 @@ jobs:
         uses: liatrio/github-actions/apprentice-action@0b41561cca6822cc8d880fe0e49e7807a41fdf91
 
     # Push Artifact
-      - name: Login to Container Registry
-        uses: docker/login-action@v3
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          workload_indentity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.WIF_SERVICE_ACCOUNT }}
 
-      - name: Push
-        id: push
-        uses: docker/build-push-action@v6
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          project_id: '${{ env.PROJECT_ID }}'
+
+      - name: 'Docker auth'
+        run: |-
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+      - name: 'Build and push container'
+        run: |-
+          docker build -t "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.APP }}/${{ env.APP }}:${{ github.sha }}" .
+          docker push "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.APP }}/${{ env.APP }}:${{ github.sha }}"
