@@ -70,7 +70,7 @@ jobs:
              ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/apiserver:latest
 
       - name: Deploy to GKE
-        uses: google-github-actions/deploy-gke-container@v0.0.3
+        uses: google-github-actions/deploy-gke@v0.0.3
         with:
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/apiserver:latest
           app_name: apiserver-deployment
