@@ -76,4 +76,4 @@ jobs:
           app_name: apiserver-deployment
           project_id: ${{ env.PROJECT_ID }}
           cluster_name: autopilot-takehome-1
-          location: us-west1
+          region: us-west1
