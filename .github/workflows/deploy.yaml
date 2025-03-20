@@ -7,10 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
   REGION: us-west1
   PROJECT_ID: liatriotakehome
-  IMAGE_NAME: ${{github.repository}}
   TEST_TAG: test/test:test
   APP: apiserver
 
@@ -66,13 +64,13 @@ jobs:
         with:
           push: true
           tags: |
-             ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/apiserver:${{ github.sha }}
-             ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/apiserver:latest
+             ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/${{ env.APP }}:${{ github.sha }}
+             ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/${{ env.APP }}:latest
 
       - name: Deploy to GKE
         uses: google-github-actions/deploy-gke@v0.0.3
         with:
-          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/apiserver:latest
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/takehome/${{ env.APP }}:latest
           app_name: apiserver-deployment
           project_id: ${{ env.PROJECT_ID }}
           cluster_name: autopilot-takehome-1
