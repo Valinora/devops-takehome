@@ -4,7 +4,7 @@ const port = 80;
 
 app.get('/', (req, tx) => {
     time = new Date().getTime();
-    response = {"message": "My name is Colin Jamison", "timestamp": time, "lorem": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."};
+    response = {"message": "My name is Colin Jamison", "timestamp": time};
     tx.type('json');
     tx.send(JSON.stringify(response));
 });
